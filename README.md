@@ -76,6 +76,33 @@ http://127.0.0.1:8000/docs
 - GET /notifications/{id}
 - PUT /notifications/{id}
 - DELETE /notifications/{id}
+- ## Live Demo
+
+Base URL:
+https://omix-notification-service.onrender.com
+
+Swagger Documentation:
+https://omix-notification-service.onrender.com/docs
+
+GitHub Repository:
+https://github.com/tahera2705/omix-notification-service
+
+## Features
+
+* User Registration
+* User Login with JWT Authentication
+* Create Notification
+* View All Notifications
+* View Notification By ID
+* Search Notifications By Title
+* Filter Notifications By Status
+* Update Notification Status
+* Delete Notification
+* SQLite Database
+* FastAPI + SQLAlchemy
+* Swagger/OpenAPI Documentation
+* Render Deployment
+
 - GET /notifications/search
 - GET /notifications/status
 
