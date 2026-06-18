@@ -1,7 +1,7 @@
-from app.core.dependencies import get_current_user
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
 from app.db.dependencies import get_db
 from app.models.notification import Notification
 from app.schemas.notification import (
@@ -22,21 +22,23 @@ router = APIRouter(
 )
 def create_notification(
     notification: NotificationCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
     current_user: str = Depends(get_current_user)
 ):
 
     new_notification = Notification(
-    title=notification.title,
-    message=notification.message,
-    channel=notification.channel
-)
+        title=notification.title,
+        message=notification.message,
+        channel=notification.channel
+    )
 
     db.add(new_notification)
     db.commit()
     db.refresh(new_notification)
 
     return new_notification
+
+
 @router.get(
     "/",
     response_model=list[NotificationResponse]
@@ -51,11 +53,13 @@ def get_notifications(
     ).all()
 
     return notifications
-from fastapi import APIRouter, Depends, HTTPException
+
+
 @router.get("/search/")
 def search_notifications(
     title: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
 ):
 
     notifications = db.query(
@@ -65,10 +69,13 @@ def search_notifications(
     ).all()
 
     return notifications
+
+
 @router.get("/status/")
 def filter_notifications_by_status(
     status: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
 ):
 
     notifications = db.query(
@@ -78,13 +85,16 @@ def filter_notifications_by_status(
     ).all()
 
     return notifications
+
+
 @router.get(
     "/{notification_id}",
     response_model=NotificationResponse
 )
 def get_notification(
     notification_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
 ):
 
     notification = db.query(
@@ -101,6 +111,7 @@ def get_notification(
 
     return notification
 
+
 @router.put(
     "/{notification_id}",
     response_model=NotificationResponse
@@ -108,7 +119,7 @@ def get_notification(
 def update_notification(
     notification_id: int,
     notification_update: NotificationUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
     current_user: str = Depends(get_current_user)
 ):
 
@@ -131,10 +142,11 @@ def update_notification(
 
     return notification
 
+
 @router.delete("/{notification_id}")
 def delete_notification(
     notification_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
     current_user: str = Depends(get_current_user)
 ):
 
