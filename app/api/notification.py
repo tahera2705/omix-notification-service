@@ -1,3 +1,4 @@
+from app.core.dependencies import get_current_user
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -22,6 +23,7 @@ router = APIRouter(
 def create_notification(
     notification: NotificationCreate,
     db: Session = Depends(get_db)
+    current_user: str = Depends(get_current_user)
 ):
 
     new_notification = Notification(
@@ -40,7 +42,8 @@ def create_notification(
     response_model=list[NotificationResponse]
 )
 def get_notifications(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
 ):
 
     notifications = db.query(
@@ -106,6 +109,7 @@ def update_notification(
     notification_id: int,
     notification_update: NotificationUpdate,
     db: Session = Depends(get_db)
+    current_user: str = Depends(get_current_user)
 ):
 
     notification = db.query(
@@ -131,6 +135,7 @@ def update_notification(
 def delete_notification(
     notification_id: int,
     db: Session = Depends(get_db)
+    current_user: str = Depends(get_current_user)
 ):
 
     notification = db.query(
